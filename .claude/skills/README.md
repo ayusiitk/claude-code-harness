@@ -28,6 +28,8 @@ The default answer is no.
 | `codebase-design` | mattpocock `codebase-design` | TypeScript snippets rewritten as Python. The "interface is not the TypeScript keyword" caveat reworded around `Protocol` and ABCs, with a preference ladder for seams in Python. |
 | `high-risk-changes` | new, from the risk overlay | Not an upstream skill. Makes the overlay concrete: blast radius and rollback, explicit object-level authorization review, the five negative-case classes, adversarial pass and widened verification. |
 | `resolving-merge-conflicts` | mattpocock `resolving-merge-conflicts` | Ported close to upstream. Added the generated-files rule, the never-rewrite-others-history rule, and semantic-conflict verification. |
+| `requesting-code-review` | superpowers `requesting-code-review` and `code-reviewer.md`, mattpocock `code-review` | mattpocock's two-axis split (Standards and Spec) on superpowers' file-based subagent dispatch. Added the rule to hand the reviewer the original requirement rather than a summary, and a risk-overlay pass. |
+| `receiving-code-review` | superpowers `receiving-code-review` | Ported close to upstream. Added the optional-findings rule and explicit handoffs to systematic-debugging for bug claims and codebase-design for clustered findings. |
 | `writing-skills` | superpowers `writing-skills`, mattpocock `writing-for-agents` and `SKILL-MECHANICS.md` | Added the four-question gate and the no-two-skills-own-the-same-decision invariant. Added the invisibility rule. Python examples only; Graphviz conventions dropped. |
 
 ## Deliberately not vendored
