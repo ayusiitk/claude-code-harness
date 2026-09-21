@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# SessionStart hook: orient the session toward this repo's engineering skills.
+#
+# This is an orientation pointer, not policy. The real policy lives in
+# .claude/skills/using-skills/SKILL.md, which loads on demand.
+#
+# Fails open: any problem exits 0 silently so a broken hook never blocks a
+# session.
+
+set -u
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd 2>/dev/null)" || exit 0
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(dirname "$SCRIPT_DIR")}"
+PROJECT_DIR="${PROJECT_DIR%/.claude}"
+
+# Only orient if the skills are actually present.
+[ -f "$PROJECT_DIR/.claude/skills/using-skills/SKILL.md" ] || exit 0
+
+read -r -d '' ORIENTATION <<'TEXT' || true
+This repo carries its own engineering skills in .claude/skills/. They are how
+work is done here, and they are invisible to the user: never name a skill in
+your output.
+
+Before acting on anything that changes code, behavior, configuration, or docs,
+use the using-skills skill. It has you read the relevant repository context
+first, then size the task, then apply the minimum process that makes the change
+safe. A typo does not get a spec. An authorization check does, even at one line.
+
+Commands are named only in docs/agents/toolchain.md. Read it before running
+anything.
+
+Never claim something is done, fixed, or passing without having actually run the
+check and reported the result.
+TEXT
+
+# Build the JSON with python3 rather than escaping by hand.
+python3 -c '
+import json, sys
+print(json.dumps({
+    "hookSpecificOutput": {
+        "hookEventName": "SessionStart",
+        "additionalContext": sys.argv[1],
+    }
+}))
+' "$ORIENTATION" 2>/dev/null || exit 0
