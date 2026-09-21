@@ -24,7 +24,8 @@ your output.
 Before acting on anything that changes code, behavior, configuration, or docs,
 use the using-skills skill. It has you read the relevant repository context
 first, then size the task, then apply the minimum process that makes the change
-safe. A typo does not get a spec. An authorization check does, even at one line.
+safe. A typo stays lightweight. An authorization check stays small when it can,
+and still gets explicit security review and stronger verification.
 
 Commands are named only in docs/agents/toolchain.md. Read it before running
 anything.

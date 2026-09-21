@@ -62,11 +62,26 @@ it, not a silent omission and never a `✓`.
 
 ## Scope of the run
 
-**"Tests pass" means the project's suite, not just your file.** A green run of
-the test you wrote is not a green suite. Before calling a change done, run the
-project's full test command even when your task named one file.
+Scope the run to what the change can actually break. Run the strongest relevant
+verification the change admits, not the largest one available.
 
-A scope statement bounds the deliverable, not the verification.
+| Change | Scope |
+|---|---|
+| Behavior in code | focused test, **then the project's full suite** |
+| Risky behavior | the above, plus whatever else touches that boundary or data |
+| Refactor | the full suite, since the point is that behavior did not move |
+| Mechanical rename | static or reference check that nothing still points at the old name |
+| Docs and comments | the diff, plus any command the text tells a reader to run |
+| Configuration | the config loaded and exercised, or its own validator |
+
+**For behavior changes, a green run of the test you wrote is not a green suite.**
+Run the project's full test command even when your task named one file: the
+suite is how you learn what else depended on the code you touched. A scope
+statement bounds the deliverable, not the verification.
+
+For changes that cannot alter behavior, the full suite proves nothing and costs
+the user time. A typo fix verified by reading the diff is verified. Running
+pytest over a README edit is ceremony, and this repo does not do ceremony.
 
 **Report every failure you saw, by name, including ones you did not cause.** A
 red test that scrolled past unmentioned is a report falsified by omission.

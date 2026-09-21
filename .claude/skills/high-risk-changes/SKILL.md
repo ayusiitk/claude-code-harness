@@ -67,11 +67,19 @@ same check the old one had. That is where authorization bugs actually come from.
 
 The happy path is the least interesting test here.
 
+Consider each class below, **say which ones apply to this change**, and test
+those. Not every class is meaningful for every change: a schema migration has no
+expired-token case, and a payment timeout may have no malformed-input case.
+Naming the ones you ruled out is part of the work, because that is where the
+missed case hides.
+
 - **denied**: wrong user, wrong role, missing credential
 - **expired**: stale token, lapsed session, past deadline
 - **replayed**: the same request twice; does it double-charge, double-send
 - **concurrent**: two writers, lost update, check-then-act races
 - **malformed**: absent field, wrong type, oversized input, injection shapes
+- **partial failure**: it died halfway; what is left behind, and is it recoverable
+- **boundary inputs**: empty, zero, maximum, just past maximum, unicode
 
 **REQUIRED SUB-SKILL:** Use test-driven-development
 
@@ -113,7 +121,7 @@ a destructive one, and a two-step deploy over a simultaneous one.
 - [ ] Blast radius written down: who is affected, how it fails
 - [ ] Rollback path stated, or its absence stated
 - [ ] Authorization reviewed explicitly, object-level as well as action-level
-- [ ] Negative cases tested: denied, expired, replayed, concurrent, malformed
+- [ ] Applicable negative-case classes named, including the ones ruled out, and the applicable ones tested
 - [ ] Own diff read adversarially
 - [ ] Verification widened past the focused tests
 - [ ] The safer of the available fixes chosen
