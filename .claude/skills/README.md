@@ -22,6 +22,8 @@ The default answer is no.
 | Skill | From | What changed |
 |---|---|---|
 | `using-skills` | superpowers `using-superpowers`, mattpocock `ask-matt` | Rewritten around size and risk classification. Added context-inspection-first, the terse classification line, the consequential-decisions-only stop rule, and the no-process-recursion rule. Dropped the multi-harness platform section. |
+| `verification-before-completion` | superpowers `verification-before-completion` | Evidence contract relaxed from pasted transcripts to `✓ command — result` lines, with raw output only where decision-relevant. Added the table of what counts as appropriate evidence when a test is not the right check. |
+| `test-driven-development` | superpowers `test-driven-development` and `writing-good-tests.md`, mattpocock `tdd/tests.md` and `tdd/mocking.md` | Iron Law replaced with a per-task default table and "whenever practical" framing. All examples rewritten for pytest. Graphviz cycle diagram dropped. |
 | `writing-skills` | superpowers `writing-skills`, mattpocock `writing-for-agents` and `SKILL-MECHANICS.md` | Added the four-question gate and the no-two-skills-own-the-same-decision invariant. Added the invisibility rule. Python examples only; Graphviz conventions dropped. |
 
 ## Deliberately not vendored
