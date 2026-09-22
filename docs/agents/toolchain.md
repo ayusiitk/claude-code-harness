@@ -8,13 +8,13 @@ changes, edit this file. Do not edit skills.
 
 | Purpose | Command | Status |
 |---|---|---|
-| All tests | `pytest` | provisional |
-| One test | `pytest <path>::<name> -v` | provisional |
-| Tests, quiet | `pytest -q` | provisional |
-| Lint | `ruff check .` | provisional |
-| Format | `ruff format .` | provisional |
-| Type check | `mypy src` | provisional |
-| Install deps | not yet chosen | provisional |
+| All tests | `uv run pytest -q` | provisional |
+| One test | `uv run pytest <path>::<name> -v` | provisional |
+| Tests, quiet | `uv run pytest -q` | provisional |
+| Lint | `uv run ruff check .` | provisional |
+| Format | `uv run ruff format .` | provisional |
+| Type check | `uv run mypy src` | provisional |
+| Install deps | `uv sync` | provisional |
 
 ## Status meanings
 

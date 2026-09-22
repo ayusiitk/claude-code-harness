@@ -1,4 +1,17 @@
 {
+  "permissions": {
+    "defaultMode": "plan",
+    "allow": [
+      "Bash(uv run pytest -q)",
+      "Bash(uv run ruff check .)",
+      "Bash(uv run mypy src)",
+      "Bash(node --test src/ai_code_workflow/dialogue_agents/static/tests/*.test.mjs)"
+    ],
+    "ask": [
+      "Bash(docker:*)",
+      "Bash(docker-compose:*)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
