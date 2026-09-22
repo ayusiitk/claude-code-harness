@@ -18,10 +18,12 @@ changes, edit this file. Do not edit skills.
 
 ## Status meanings
 
-- **provisional** — the conventional default for a Python library, but nothing
-  in this repo installs or configures it yet. Before relying on a provisional
-  row, check that the tool is actually available; if it is not, say so in the
-  verification report with a `⚠` line rather than claiming it passed.
+- **provisional** — not proven here yet. Either the conventional default for a
+  Python library that nothing in this repo installs or configures, or a command
+  that is configured but has never been verified to run in this environment.
+  Before relying on a provisional row, check that the tool is actually
+  available; if it is not, say so in the verification report with a `⚠` line
+  rather than claiming it passed.
 - **authoritative** — chosen, installed, and configured for this repo. Trust it.
 
 ## When you change this file
