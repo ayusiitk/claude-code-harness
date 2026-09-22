@@ -1,13 +1,21 @@
 # ai-code-workflow
 
-A general-purpose Python library.
+A Claude Code engineering workflow for Python repositories.
 
 ## What is in here right now
 
-The library itself is not written yet. What exists is the development
-environment: a set of engineering skills in `.claude/skills/` that make Claude
-Code behave like a strong senior engineer by default, without turning you into a
-workflow operator.
+**This branch is the harness on its own, and deliberately so.** It carries the
+engineering skills in `.claude/skills/`, the hook, the permission settings and
+the toolchain table — and no application code. The library this workflow was
+built to develop lives on `feat/langgraph-dialogue-agents`, where the skills
+are exercised against something real and then promoted back here.
+
+What that buys you is a branch you can read, copy into another project, or
+clone without inheriting a LangGraph application you did not ask for.
+
+A set of engineering skills in `.claude/skills/` that make Claude Code behave
+like a strong senior engineer by default, without turning you into a workflow
+operator.
 
 Clone the repo, open Claude Code, say "build X". The agent reads the relevant
 code, sizes the task, uses the minimum process that makes the change safe, and
@@ -32,13 +40,43 @@ operate.
 Risk is an overlay, not a size. A one-line change to an authorization check
 stays small and still gets the risk treatment.
 
+## The contract idea
+
+Before writing tests or implementation, the agent emits a small block naming
+each externally observable decision and where it came from:
+
+```
+Contract
+| Decision | Source |
+|---|---|
+| accepted inputs        | REQUEST    |
+| invalid input behavior | UNRESOLVED |
+```
+
+`REQUEST` means you said so. `REPOSITORY` means existing code settles it.
+`UNRESOLVED` means neither, and the agent stops and asks rather than inventing
+an answer.
+
+A function name is not a source. Neither is a common convention, nor a
+sensible default the agent chose and announced. This exists because an agent
+asked for `parse_version()` will otherwise decide for itself which formats are
+valid and what invalid input does, then encode all of it in tests, and you will
+not find out until you read them.
+
 ## Authorization: changes need your approval
 
 Sessions start in plan mode, unless a higher-precedence settings file or a
 `--permission-mode` flag says otherwise. The agent can read files, search, and
-run the repository's verification commands, but a change to the repository
-needs your approval unless the command is explicitly allow-listed for
-assessment. It assesses and proposes; you approve; then it implements.
+run the commands the allow list names — the whole suite, the lint check and the
+type check — but a change to the repository needs your approval, and so does
+every other row in `docs/agents/toolchain.md`, including the single-test form
+that carries a flag. It assesses and proposes; you approve; then it implements.
+
+**The mode decides whether any of that applies.** The allow list is consulted
+by the modes that gate tool use; a session started outside plan mode is not
+being held by this list, because nothing is asking. What does survive the mode
+is the `ask` list, which is why the container rules are written there rather
+than left to plan mode to catch.
 
 This is enforced by Claude Code's permission engine, not by the agent's good
 manners. A refused command comes back as `This command requires approval` and
@@ -111,6 +149,38 @@ same session is no longer gated. Start a new session, or switch the mode back,
 when you want the boundary again.
 
 To opt a single session out, start it with `--permission-mode default`.
+
+## Using it in this repo
+
+```
+git clone https://github.com/ayusiitk/ai-code-workflow
+cd ai-code-workflow
+claude
+```
+
+`.claude/` is already here. Give it work in plain language.
+
+## Using it on real work
+
+The skills have to be visible to that project. Claude Code reads project skills
+from `.claude/skills/` and personal skills from `~/.claude/skills/`.
+
+- **Project-local (preferred):** copy `.claude/skills/`, `.claude/hooks/` and
+  `.claude/settings.json` into the target repo, plus `docs/agents/toolchain.md`
+  with that project's real commands. Versioned, reproducible, shared with
+  collaborators.
+- **Global:** copy the skill directories into `~/.claude/skills/`. Works
+  everywhere, but unversioned, invisible to collaborators, and without the
+  SessionStart hook.
+
+There is no installer.
+
+## Read this before your first real task
+
+**[docs/agents/working-with-the-harness.md](docs/agents/working-with-the-harness.md)**
+— what to put in a prompt, what to leave out, what each kind of request should
+look like coming back, and how to tell when the harness is doing too much or
+too little.
 
 ## Commands
 

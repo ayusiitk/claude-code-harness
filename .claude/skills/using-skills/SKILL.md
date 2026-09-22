@@ -1,6 +1,6 @@
 ---
 name: using-skills
-description: Use at the start of any request that changes code, behavior, configuration, or docs, before exploring the codebase or asking clarifying questions. Establishes how much process the task needs.
+description: Use when starting any request that changes code, behavior, configuration, or docs, before exploring the codebase or asking clarifying questions. Establishes how much process the task needs.
 ---
 
 # Using Skills
@@ -10,94 +10,101 @@ description: Use at the start of any request that changes code, behavior, config
 3. **Escalate when complexity or risk warrants it.**
 4. **Never claim completion without evidence.**
 
-## The pipeline
+## 1. Inspect the repository
 
-understand request → inspect repo context → classify size + risk → minimum
-sufficient workflow → execute → verify → adversarial review if risk warrants → done
+Read enough to know what architecture exists, what conventions are in force,
+how tests are structured, and which commands are authoritative
+(`docs/agents/toolchain.md`).
 
-## 1. Inspect context first
-
-Read enough to know: what architecture exists, what conventions are in force,
-how tests are structured, which commands are authoritative
-(`docs/agents/toolchain.md`), whether a similar feature already exists to
-follow, what boundaries are established.
-
-This is reading, not ceremony. It stops "add endpoint X" from summoning a
-generic workflow when the repo already has one obvious way to do it.
-
-## 2. Classify size, then overlay risk
+## 2. Classify
 
 | Class | Looks like | Process |
 |---|---|---|
-| TRIVIAL | typo, docs, comment, mechanical rename | edit → verify |
-| SMALL | isolated change to code already here | understand → test → implement → verify |
-| NORMAL | a feature or bug fix | + brief design, + review |
-| LARGE | new subsystem, cross-cutting, interface-changing | + brainstorm → spec → plan → execute |
+| TRIVIAL | typo, docs, mechanical rename | edit, verify |
+| SMALL | isolated change to code already here | test, implement, verify |
+| NORMAL | feature or bug fix | + brief design, + review |
+| LARGE | subsystem, cross-cutting, interface-changing | + brainstorm, spec, plan |
 
-**RISKY is an overlay, not a fifth size.** It applies when the change alters
-user-, security-, data-, or externally-observable behavior: auth, payments,
-migrations, destructive operations, security boundaries. An internal helper is
-SMALL. An API response shape is NORMAL. An authorization check is SMALL + RISKY.
-A migration is whatever size it is, + RISKY.
+**RISKY is an orthogonal overlay, not a fifth class.** It applies at any size,
+when the change alters user-, security-, data-, or externally-observable
+behavior: auth, payments, migrations, destructive operations.
 
 **REQUIRED SUB-SKILL for the overlay:** Use high-risk-changes
 
-## 3. Say the classification in one terse line
+Edge cases and worked examples:
+[classification.md](references/classification.md)
 
-`<CLASS>[ + RISKY]: <why, in a clause>`
+## 3. Contract
 
-> `NORMAL + RISKY: account-email change touches authentication and user data.`
+Before writing any test or implementation, emit this block. **Always** emit it,
+including when every line is settled. It is a few lines, not a planning
+exercise.
 
-Never explain the methodology behind it. That is theater.
+```
+Contract
+| Decision | Source |
+|---|---|
+| accepted inputs          | REQUEST     |
+| invalid input behavior   | UNRESOLVED  |
+| normalization            | REPOSITORY  |
+```
 
-**When uncertain, start heavier.** Classification may change either way, but
-reducing process needs justification from repository evidence. "There is already
-a registry here, so this is an implementation, not an architecture" is a reason.
-"This is taking a while" is not.
+One row per externally observable decision you are about to encode. Sources:
 
-## Hard gates
+- **REQUEST** — the user stated it
+- **REPOSITORY** — an existing caller, test, spec or convention settles it
+- **UNRESOLVED** — neither
+
+**Any UNRESOLVED row: ask one focused question and stop.**
+
+These are not sources. A row resting on any of them is UNRESOLVED:
+
+- the function or parameter name
+- a common convention, or what a well-designed API would plausibly do
+- your own earlier implementation in this session
+- a default you chose, whether or not you announce it
+
+When the change alters no observable behavior, the whole block is one line:
+`Contract: no observable behavior changes.`
+
+**Classification chooses the workflow. It does not authorize implementation.**
+
+What counts as externally observable, and which decisions are yours:
+[contract-decisions.md](references/contract-decisions.md)
+
+## 4. Select the workflow and execute
+
+Say the class in one terse line, `<CLASS>[ + RISKY]: <why>`, plus any
+**implementation** default you took. Never a behavioral one: announcing a
+contract choice does not authorize it, and step 3 governs. Never explain the
+methodology behind it. Then run that class's process.
+
+When uncertain, start heavier. Reducing process needs justification from
+repository evidence, not impatience.
+
+## 5. Boundaries
 
 | Transition | Gate |
 |---|---|
-| Changing user-, security-, data-, or externally-observable behavior | appropriate concrete verification evidence before claiming done |
-| Database migration | state rollback path and data-loss implications first |
-| Security or authorization boundary | review authorization explicitly before implementing |
-| Merge or push to a shared branch | real verification evidence, not a claim |
+| Unresolved contract decision | ask before implementing or testing |
+| Changing user-, security-, data-, externally-observable behavior | concrete evidence before claiming done |
+| Database migration | state rollback and data-loss implications first |
+| Security or authorization boundary | review authorization explicitly first |
+| Merge or push to a shared branch | real evidence, not a claim |
 
-Everything else is guidance you apply with judgment.
+Stop also for irreversible or destructive operations, and for side effects
+outside the working tree. **Once the contract gate has passed, nothing else
+stops.** A session parked on a routine decision you could have answered costs
+the user their day.
 
-## Stop and ask only when
+An unresolved contract is never such a decision. You can always invent an
+answer to it, and that is what step 3 forbids.
 
-> The next step commits the user to a consequential product, architectural,
-> security, or irreversible decision that cannot reasonably be inferred from the
-> repository and the request.
+A skill may invoke another **only when that skill owns the next decision
+point**. Never restart the workflow.
 
-Plus irreversible or destructive operations, and side effects outside the
-working tree.
+**Never name a skill in your output.** The user should experience good
+engineering, not a framework operating.
 
-**Nothing else stops.** Routine decisions get made and recorded. "Must the new
-address be verified before it becomes active?" is worth stopping for. "Which
-module does the helper live in?" is not. A session parked on a question you
-could have answered costs the user their day.
-
-## No process recursion
-
-A skill may invoke another **only when that skill owns the next decision point**.
-Never restart the workflow from the beginning. Once a stage is complete, do not
-re-enter it unless new information invalidates its output, and say what that was.
-
-## Stay invisible
-
-Never say "according to the high-risk-changes skill" or "the TDD skill requires
-me to". Review the authorization because that is what a good engineer does.
-
-## Red Flags
-
-| Thought | Reality |
-|---|---|
-| "Let me explore the codebase first" | Yes — that is step 1. Then classify. |
-| "I'll ask if they want me to proceed" | Only if the next step is consequential. Otherwise proceed. |
-| "This is complex, so it's LARGE" | Read the repo first. Existing abstractions shrink tasks. |
-| "It's only one line, so it's safe" | One line in an auth check is SMALL + RISKY. |
-| "Tests probably pass" | Then you have no evidence. Run them. |
-| "I should tell them which skill I'm using" | No. Just do the work. |
+Rationalizations that mean stop:
+[red-flags.md](references/red-flags.md)

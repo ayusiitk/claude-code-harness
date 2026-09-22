@@ -1,6 +1,15 @@
 # ai-code-workflow
 
-A general-purpose Python library.
+A Claude Code engineering workflow for Python repositories.
+
+This branch carries the harness and nothing else: the skills, the hook, the
+permission settings and the toolchain table. There is no application code here
+and that is deliberate. The library it was built to develop lives on
+`feat/langgraph-dialogue-agents`; skills are exercised there against a real
+interface and promoted back here once they hold.
+
+So an empty `src/` is not a missing checkout. Do not add application code to
+this branch to make a task easier.
 
 ## How work happens here
 

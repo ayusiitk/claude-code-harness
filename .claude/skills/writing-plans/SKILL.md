@@ -85,7 +85,8 @@ def test_rejects_expired_token():
 
 - [ ] **Step 2: Run it and watch it fail**
 
-Run: `pytest tests/test_thing.py::test_rejects_expired_token -v`
+Run: the one-test command from `docs/agents/toolchain.md`, for
+`tests/test_thing.py::test_rejects_expired_token`
 Expected: fails with `NameError: verify`
 
 - [ ] **Step 3: Minimal implementation**

@@ -231,41 +231,16 @@ to describe, carrying tone at an entry point, or being the content itself. Leave
 it out where it would decorate a surface people are trying to work in.
 
 The places it usually earns its keep: an icon beside a label in a list people
-scan repeatedly, an empty state where an illustration turns a dead end into an
-invitation, a first-run or landing moment that has to set a tone, a diagram that
-shows a structure prose would take a paragraph to describe.
 
-**Icons.** One family, one optical weight, one grid. Icons take their colour
-from the ink and status tokens rather than carrying their own. An icon without a
-label is a guess, unless the pairing is already a convention inside this product
-— and an icon that is the only carrier of meaning needs an accessible name.
+What makes an asset shippable rather than merely present — icon families and
+labelling, contrast against an image's extremes, video and autoplay, alt text
+and decorative status, weight and declared dimensions, dark-theme variants, and
+recording a licence: [choosing-imagery.md](choosing-imagery.md)
 
-**Background and hero imagery.** Text over an image needs a scrim, a container
-or a crop that guarantees the contrast floor against the lightest and darkest
-part of the image, not against its average. Never bake text into an image: it
-cannot be zoomed, selected, translated, or read aloud.
-
-**Video and animated media.** Autoplay only when it is muted, short, and
-silenced by a reduced-motion preference; anything longer gets controls the user
-reaches first. A poster frame has to stand alone, because it is what most people
-will see. Speech needs captions or a transcript. Media is never the only way a
-piece of information is available.
-
-**Every asset is an accessibility decision.** Decorative images are hidden from
-assistive technology and carry empty alt text; meaningful ones carry alt text
-that says the information, not the filename. Getting this backwards is how a
-screen reader ends up narrating twelve identical icon names.
-
-**Weight is part of the design.** Declared dimensions so nothing shifts as
-assets land, a modern format, sizes appropriate to the width being served, and
-lazy loading below the fold. An asset that delays the first paint has made the
-interface worse, however good it looks once it arrives.
-
-**Themes and provenance.** An asset needs a dark-theme variant or needs to be
-theme-agnostic; a transparent asset drawn for a light background will show its
-halo on a dark one. Record where each new asset came from and under what licence
-— an asset with no provenance is a liability the reviewer cannot check.
-
+**The seam applies to assets.** An upload path, a media field the API does not
+return, an asset pipeline, a third-party embed calling another origin, or an
+asset whose licence you cannot establish is behavior, not decoration. It stops
+at step 1.
 ## 9. Every device is a different design
 
 The same surface on a phone, a tablet and a laptop is a different ergonomic
@@ -398,36 +373,8 @@ was pasted in by accident.
 
 ## Red Flags
 
-| Thought | Reality |
-|---|---|
-| "The backend just needs one small field for this" | That is the seam. Stop and say so. |
-| "I'll hardcode this colour, it's one component" | That is how the token system dies. |
-| "It looks more modern with the animation" | Modern is not a reason. What does it tell the user? |
-| "The focus ring is ugly, I'll remove it" | Then the keyboard user is lost. Restyle it. |
-| "Contrast is close enough" | It is a threshold, not a preference. |
-| "I only changed CSS" | Then the diff against the base proves it. Run it. |
-| "The empty state is obvious" | It is the best teaching moment the screen has. |
-| "I'll polish it now and check states later" | Later is where unfinished interfaces come from. |
-| "This design system is limiting" | It is the reason the product looks like one product. |
-| "The token change covers every page" | Only the pages that already used the token. Walk the list. |
-| "I did the main screens, the rest are the same" | You have not read them. That belief is the defect. |
-| "That subpage isn't in the nav" | Users still reach it, and it looks abandoned. |
-| "The existing copy is fine" | Then say so per string, after generating alternatives. Not before. |
-| "I'll tighten the wording as I go" | One pass of synonyms is not a solution space. |
-| "This headline is punchier" | Is it still true, and does it still do the original job? |
-| "Users will click it, that's what matters" | A promise the next screen does not keep is a behavior claim, and it breaks. |
-| "Copy is content, not my scope" | It is rendered, it is presentation, and nobody else is coming. |
-| "An icon here would look nicer" | Nicer is not a job. What does it identify, indicate or replace? |
-| "Everyone knows what this icon means" | Outside a handful of conventions, nobody does. Label it. |
-| "I'll drop in a stock photo to warm it up" | Unlicensed, unattributed, and it says nothing. Both are disqualifying. |
-| "The image is decorative, alt text doesn't matter" | Then say so explicitly, so it is skipped rather than announced. |
-| "It's a big hero, but it looks incredible" | Not once it arrives after the text. Weight is part of the design. |
-| "It's responsive, it has breakpoints" | Breakpoints answer width. They do not answer touch, reach, or a keyboard eating the viewport. |
-| "It stacks fine on mobile" | Stacking is reflow. What is the reading order, and is the primary action still reachable? |
-| "We can hide that on small screens" | That is removing a capability. It stops at the seam. |
-| "I checked it by narrowing the browser" | Then hover still worked and the keyboard never opened. That is not the phone. |
-| "The design system's breakpoints are tablet and desktop" | Users arrive at every width in between, including half a window. |
-
+The rationalization for every failure mode above, with what is actually true:
+[red-flags.md](red-flags.md)
 ## Checklist
 
 - [ ] Presentation/behavior seam established and written down before editing

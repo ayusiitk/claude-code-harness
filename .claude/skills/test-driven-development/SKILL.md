@@ -34,8 +34,32 @@ works, not a rule that stops work.
 | Docs | no test |
 | Mechanical rename | static verification, no new test |
 
-If the task is not in the table, ask what would prove this change works, and
-whether that proof can exist before the code.
+If the task is not in the table, work out what evidence would prove the change
+works **without inventing observable behavior to test against**. If that
+evidence would require a behavioral decision labelled UNRESOLVED, return to the
+contract gate and ask. Do not settle it by choosing what to assert.
+
+## Prerequisite: the contract gate
+
+<HARD-GATE>
+Before writing a test, confirm every behavior it asserts appears in the emitted
+Contract block as REQUEST or REPOSITORY.
+
+If the block was never emitted, emit it now rather than writing the test. A
+behavior you can defend but nobody specified is UNRESOLVED, however reasonable
+or conventional. The function name is not a source.
+
+If the behavior is not established, **return to the contract gate in
+`using-skills`** and ask. Do not settle it here.
+</HARD-GATE>
+
+This skill does not own contract decisions and cannot resolve one by writing a
+test for its best guess. A test asserts an expected value, so writing one
+decides the contract; a suite of them makes the decision look authoritative
+afterwards.
+
+Thirteen tests against an invented contract is not thorough. It is thirteen
+assertions the user never agreed to.
 
 ## The loop
 
@@ -108,6 +132,7 @@ and can obviously verify does not need to be deleted and retyped.
 | Excuse | Reality |
 |---|---|
 | "Too simple to test" | Simple code breaks. The test takes thirty seconds. |
+| "I'll encode the obvious behavior in tests" | If the contract was never settled, the test settles it silently. |
 | "I'll test after" | Tests written after pass immediately. You never proved they can catch the bug. |
 | "Already tested it manually" | Ad hoc, unrecorded, unrepeatable. "Worked when I tried it" is not coverage. |
 | "The test is hard to write" | Listen to that. Hard to test means hard to use. Fix the seam. |
@@ -119,6 +144,7 @@ and can obviously verify does not need to be deleted and retyped.
 ## Checklist
 
 - [ ] Decided, against the table above, what evidence this change needs
+- [ ] Every test's expected value traces to the request or the repository, not to a default you chose
 - [ ] Test written before the implementation, where practical
 - [ ] Watched it fail, and the failure was the expected one
 - [ ] Minimal implementation, not speculative generality

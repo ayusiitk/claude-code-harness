@@ -180,6 +180,30 @@ nothing in a terminal — use a numbered list instead).
 Keep *triggers* technology-agnostic though: describe the problem (race
 condition, inconsistent state) rather than a language-specific symptom.
 
+## Test the skill before trusting it
+
+A skill is a claim about behavior, and an untested claim is a hope. Probe it
+with a request phrased the way a user would phrase it, in a context that has
+not read the skill — a subagent or a fresh session — and judge what comes back,
+not what the skill says should come back.
+
+**The session that wrote the skill cannot evaluate it.** It has just read the
+rules and will follow them, which proves nothing about an agent meeting the
+skill cold. Author-run probes are rehearsals and get labelled as such.
+
+Five probes: does it fire at all, does it do the work it claims, does it stay
+out of the neighbouring request it should not take, does it stop at its own
+boundary, and what excerpt proves each of those. Assert on behavior a user
+could see — a question asked, a file untouched, a required block present. Never
+assert that the agent named the skill: the invisibility rule means a perfect
+run never will.
+
+The procedure, what to assert on, how to record a run, and a worked example:
+[evaluating-a-skill.md](evaluating-a-skill.md)
+
+A skill nobody has probed is not wrong. It is unverified, and saying it works
+is the same overclaim as reporting a test suite that never ran.
+
 ## Red Flags
 
 | Thought | Reality |
@@ -189,6 +213,9 @@ condition, inconsistent state) rather than a language-specific symptom.
 | "The description should explain the method" | Then the model skips the skill, believing it already knows. |
 | "I'll link the other skill's file so it's handy" | That force-loads it. Name the skill in prose. |
 | "More skills means more capability" | More skills means worse triggering for all of them. |
+| "I read it back and it looks right" | You wrote it. Probe it from a context that did not. |
+| "It worked when I used it just now" | That run was primed. An author-run probe is a rehearsal. |
+| "The agent said it followed the skill" | Skills are invisible. Assert on behavior, never on self-report. |
 | "I'll have it announce which skill it's using" | That is workflow theater. The user wants the work, not the mechanism. |
 
 ## Checklist
@@ -206,4 +233,7 @@ When adding or editing a skill:
 - [ ] Commands deferred to `docs/agents/toolchain.md`
 - [ ] Examples are Python and pytest
 - [ ] Reference over ~100 lines moved to a sibling file
+- [ ] Probed from an unprimed context: fires, does the work, stays out of the
+      neighbouring request, stops at its own boundary
+- [ ] Probe evidence recorded, or the skill described as unverified rather than working
 - [ ] Row added to `.claude/skills/README.md` with provenance

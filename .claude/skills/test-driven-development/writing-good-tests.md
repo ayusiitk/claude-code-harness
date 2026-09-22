@@ -83,11 +83,11 @@ they give real behavior with automatic cleanup, which beats a mock.
 
 ```python
 @pytest.mark.parametrize(
-    "raw,expected",
-    [("Hello World", "hello-world"), ("  a  b ", "a-b"), ("Ünïcode", "unicode")],
+    "fahrenheit,expected",
+    [(32, 0.0), (212, 100.0), (-40, -40.0)],
 )
-def test_slugify(raw, expected):
-    assert slugify(raw) == expected
+def test_to_celsius(fahrenheit, expected):
+    assert to_celsius(fahrenheit) == pytest.approx(expected)
 ```
 
 Each case reports as its own test, so a failure names the input.

@@ -12,3 +12,8 @@ venv/
 .coverage
 htmlcov/
 .DS_Store
+
+# Artifacts the application line leaves in a shared checkout. Ignored here so
+# switching branches cannot drop them into the harness-only history.
+tests/browser/shots/
+data/

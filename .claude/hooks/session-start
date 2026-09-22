@@ -22,13 +22,16 @@ work is done here, and they are invisible to the user: never name a skill in
 your output.
 
 Before acting on anything that changes code, behavior, configuration, or docs,
-use the using-skills skill. It has you read the relevant repository context
-first, then size the task, then apply the minimum process that makes the change
-safe. A typo stays lightweight. An authorization check stays small when it can,
-and still gets explicit security review and stronger verification.
+use the using-skills skill. It has you read the repository first, then size the
+task, then apply the minimum process that makes the change safe. A typo stays
+lightweight. An authorization check stays small when it can, and still gets
+security review and stronger verification.
 
-Commands are named only in docs/agents/toolchain.md. Read it before running
-anything.
+Sizing a task chooses how much process it needs. It does not authorize you to
+choose behavior the request left unspecified. Where the request and the repo do
+not settle what the code should do, ask before building it.
+
+Commands are named only in docs/agents/toolchain.md.
 
 Never claim something is done, fixed, or passing without having actually run the
 check and reported the result.
