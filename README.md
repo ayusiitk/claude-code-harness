@@ -21,9 +21,12 @@ alternative.
 **This repo is the harness on its own, and deliberately so.** It carries the
 engineering skills in `.claude/skills/`, the hook, the permission settings and
 the toolchain table — and no application code, by design: this is meant to be
-cloned or installed into other projects, not developed against directly. See
-`CLAUDE.md`'s provenance note and the `archive/decompose-spine` tag in this
-repo's history for where the current design came from.
+cloned or installed into other projects, not developed against directly. Its
+history is extracted from the harness-only line of
+[`ayusiitk/ai-code-workflow`](https://github.com/ayusiitk/ai-code-workflow),
+where the `archive/decompose-spine` tag marks the design experiment this
+harness's current shape actually descends from (see the "Provenance" section
+below for the skills' own upstream origin).
 
 What that buys you is a repo you can read, copy into another project, or
 clone without inheriting an unrelated application you did not ask for.
