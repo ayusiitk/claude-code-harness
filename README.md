@@ -6,7 +6,7 @@ codebase or language.
 ## Install in another project
 
 ```
-./install.sh /path/to/your-project
+./install.sh <path-to-target-repo>
 ```
 
 Copies the skills and hook in unconditionally (they're vendored, not meant to
