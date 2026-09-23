@@ -16,6 +16,10 @@ changes, edit this file. Do not edit skills.
 | Type check | `uv run mypy src` | provisional |
 | Install deps | `uv sync` | provisional |
 
+These rows are a placeholder default for a Python project, not a claim that
+this repo runs them — replace them with the target project's actual commands
+once the harness is installed there.
+
 ## Status meanings
 
 - **provisional** — not proven here yet. Either the conventional default for a
@@ -25,6 +29,19 @@ changes, edit this file. Do not edit skills.
   available; if it is not, say so in the verification report with a `⚠` line
   rather than claiming it passed.
 - **authoritative** — chosen, installed, and configured for this repo. Trust it.
+
+## A note on commands with side effects
+
+Some commands do more than read or verify — they start containers, pull
+images, or write into the working tree (a Docker build, a browser/E2E smoke
+test, anything that runs the app for real rather than checking it).
+`.claude/settings.json` carries an `ask` rule for Docker commands as a
+backstop, but the rule is the floor and not the reason: never run a
+side-effecting command freely just because a task calls for the evidence it
+would produce. If the prompt to ask doesn't appear, ask anyway. Mark a
+side-effecting row's status **authoritative** only once it has actually been
+run and watched to pass in this repo — a command that is merely configured is
+still provisional.
 
 ## When you change this file
 

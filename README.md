@@ -1,17 +1,32 @@
-# ai-code-workflow
+# claude-code-harness
 
-A Claude Code engineering workflow for Python repositories.
+A reusable Claude Code engineering harness for any project, not tied to one
+codebase or language.
 
-## What is in here right now
+## Install in another project
 
-**This branch is the harness on its own, and deliberately so.** It carries the
+```
+./install.sh /path/to/your-project
+```
+
+Copies the skills and hook in unconditionally (they're vendored, not meant to
+be hand-edited), merges `.claude/settings.json` and `CLAUDE.md` instead of
+overwriting them, and seeds `docs/agents/toolchain.md` only if the target
+doesn't already have one. Safe to re-run. See `install.sh` for the exact
+rules, and the "Using it on real work" section below for the manual
+alternative.
+
+## What is in here
+
+**This repo is the harness on its own, and deliberately so.** It carries the
 engineering skills in `.claude/skills/`, the hook, the permission settings and
-the toolchain table — and no application code. The library this workflow was
-built to develop lives on `feat/langgraph-dialogue-agents`, where the skills
-are exercised against something real and then promoted back here.
+the toolchain table — and no application code, by design: this is meant to be
+cloned or installed into other projects, not developed against directly. See
+`CLAUDE.md`'s provenance note and the `archive/decompose-spine` tag in this
+repo's history for where the current design came from.
 
-What that buys you is a branch you can read, copy into another project, or
-clone without inheriting a LangGraph application you did not ask for.
+What that buys you is a repo you can read, copy into another project, or
+clone without inheriting an unrelated application you did not ask for.
 
 A set of engineering skills in `.claude/skills/` that make Claude Code behave
 like a strong senior engineer by default, without turning you into a workflow
@@ -89,15 +104,19 @@ boundary cannot be argued around.
 ```json
 "permissions": {
   "defaultMode": "plan",
-  "allow": ["Bash(uv run pytest -q)", "Bash(uv run mypy src)", "..."],
+  "allow": [],
   "ask":   ["Bash(docker:*)", "Bash(docker-compose:*)"]
 }
 ```
 
-**Every allow entry is an exact command, with no trailing `:*`.** That detail is
-the whole design, and getting it wrong the first time cost this repo its
-boundary. A rule written `Bash(uv run pytest:*)` matches any command *starting*
-with that prefix, and the flags reachable from those prefixes are not benign:
+**`allow` ships empty on purpose.** Add your own project's test/lint/typecheck
+commands to it once you know them — `install.sh` merges rather than
+overwrites this file on a re-run, so your additions survive an update. When
+you do add a row, **make it an exact command, with no trailing `:*`.** That
+detail is the whole design, and getting it wrong cost the project this
+harness was extracted from its boundary. A rule written `Bash(uv run pytest:*)`
+matches any command *starting* with that prefix, and the flags reachable from
+those prefixes are not benign:
 
 | Allowed prefix | What it also permits |
 |---|---|
@@ -105,19 +124,13 @@ with that prefix, and the flags reachable from those prefixes are not benign:
 | `Bash(node --check:*)` | `--import 'data:text/javascript,...'` — Node runs the import before it syntax-checks, so this is arbitrary code execution |
 | `Bash(uv run ruff check:*)` | `--fix` — rewrites every source file |
 
-All three were demonstrated against this repo's own earlier allow list. A prefix
-rule cannot express "this command but not that flag", so the list names the
-exact commands from `docs/agents/toolchain.md` and nothing else. Anything with
-a flag on it — a single test, a different pytest invocation — prompts, which is
-the correct answer rather than an inconvenience. Read-only shell commands such
-as `ls`, `grep`, `find` and the read-only forms of `git` need no rule; Claude
-Code already treats them as read-only.
-
-One entry is the exception, and it is worth knowing rather than glossing. The
-`node --test` rule names a JavaScript test path that exists on the
-dialogue-agents line and not on this branch, so here it matches nothing and
-grants nothing. It is carried verbatim so the two lines do not drift apart, and
-it starts working the moment that code arrives.
+All three were demonstrated in practice. A prefix rule cannot express "this
+command but not that flag", so name the exact commands from
+`docs/agents/toolchain.md` and nothing else. Anything with a flag on it — a
+single test, a different pytest invocation — prompts, which is the correct
+answer rather than an inconvenience. Read-only shell commands such as `ls`,
+`grep`, `find` and the read-only forms of `git` need no rule; Claude Code
+already treats them as read-only.
 
 The `ask` list is the other half. `deny` beats `ask` beats `allow`, and `ask`
 applies whatever the mode is, so anything that starts a container prompts even
@@ -153,8 +166,8 @@ To opt a single session out, start it with `--permission-mode default`.
 ## Using it in this repo
 
 ```
-git clone https://github.com/ayusiitk/ai-code-workflow
-cd ai-code-workflow
+git clone https://github.com/ayusiitk/claude-code-harness
+cd claude-code-harness
 claude
 ```
 
@@ -165,15 +178,16 @@ claude
 The skills have to be visible to that project. Claude Code reads project skills
 from `.claude/skills/` and personal skills from `~/.claude/skills/`.
 
-- **Project-local (preferred):** copy `.claude/skills/`, `.claude/hooks/` and
-  `.claude/settings.json` into the target repo, plus `docs/agents/toolchain.md`
-  with that project's real commands. Versioned, reproducible, shared with
-  collaborators.
+- **Project-local via `install.sh` (preferred):** from a checkout of this
+  repo, run `./install.sh /path/to/target-repo`. Versioned, reproducible,
+  shared with collaborators, and safe to re-run when the harness updates.
+- **Project-local by hand:** copy `.claude/skills/`, `.claude/hooks/` and
+  `.claude/settings.json` into the target repo yourself, plus
+  `docs/agents/toolchain.md` with that project's real commands. Same result
+  as `install.sh`, useful when you want to review each file as you add it.
 - **Global:** copy the skill directories into `~/.claude/skills/`. Works
   everywhere, but unversioned, invisible to collaborators, and without the
   SessionStart hook.
-
-There is no installer.
 
 ## Read this before your first real task
 
